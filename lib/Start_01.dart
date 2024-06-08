@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Start_01_dropdown.dart';
+import 'Start_02.dart';
 
 void main() {
   runApp(MyApp());
@@ -49,6 +50,7 @@ class _Start_01_State extends State<Start_01> {
             Center(
               child: Container(
                 width: 150,
+                height: 200,
                 child: Column(
                   children: [
                     // 첫번째 드롭다운
@@ -115,7 +117,6 @@ class _Start_01_State extends State<Start_01> {
                         });
                       },
                     ),
-                    SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -127,15 +128,19 @@ class _Start_01_State extends State<Start_01> {
             Container(
               child: ElevatedButton(
                 onPressed: () {
-                  // 버튼을 눌렀을 때 실행할 코드
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Start_02(
+                              dropdownValue1: dropdownValue1,
+                              dropdownValue2: dropdownValue2,
+                              dropdownValue3: dropdownValue3,
+                            )),
+                  );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF55B150),
-                  foregroundColor: Colors.white,
-                  minimumSize: Size(200, 75),
-                ),
+                style: myButtonStyle,
                 child: const Text(
-                  '확인',
+                  'Next',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -149,3 +154,15 @@ class _Start_01_State extends State<Start_01> {
     );
   }
 }
+
+final ButtonStyle myButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: Colors.white,
+    foregroundColor: Color(0xff55b150),
+    minimumSize: Size(125, 50),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(5.0),
+      side: BorderSide(
+        color: Color(0xff55b150),
+        width: 4,
+      ),
+    ));
