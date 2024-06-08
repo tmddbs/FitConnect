@@ -43,6 +43,7 @@ Map<String, List<String>> getDropdownValue2() {
       '수원시',
       '시흥시',
       '안산시',
+      '안성시',
       '안양시',
       '양주시',
       '양주시',
