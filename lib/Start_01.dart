@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Start_01_dropdown.dart';
 import 'Start_02.dart';
+import 'Start_gps.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,6 +27,43 @@ class _Start_01_State extends State<Start_01> {
   String? dropdownValue3;
   final Map<String, List<String>> dropdownOption2 = getDropdownValue2();
   final Map<String, List<String>> dropdownOption3 = getDropdownValue3();
+  late LoadingOverlay _loadingOverlay;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _loadingOverlay.remove();
+    super.dispose();
+  }
+
+  Future<void> _setInitialLocation() async {
+    _loadingOverlay.show();
+    try {
+      var address = await LocationService.getCurrentAddress();
+      setState(() {
+        dropdownValue1 = address[0];
+        dropdownValue2 = address[1];
+        dropdownValue3 = address[2];
+      });
+    } catch (e) {
+      print(e);
+    } finally {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Start_02(
+                  dropdownValue1: dropdownValue1,
+                  dropdownValue2: dropdownValue2,
+                  dropdownValue3: dropdownValue3,
+                )),
+      );
+      _loadingOverlay.hide();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,36 +160,92 @@ class _Start_01_State extends State<Start_01> {
               ),
             ),
 
-            SizedBox(height: 100),
+            SizedBox(height: 80),
 
             // 버튼 컨테이너
             Container(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Start_02(
-                              dropdownValue1: dropdownValue1,
-                              dropdownValue2: dropdownValue2,
-                              dropdownValue3: dropdownValue3,
-                            )),
-                  );
-                },
-                style: myButtonStyle,
-                child: const Text(
-                  'Next',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              child: Column(
+                children: [
+                  // 추가할 텍스트
+                  GestureDetector(
+                    onTap: () {
+                      _loadingOverlay = LoadingOverlay(context);
+                      _setInitialLocation();
+                    },
+                    child: const Text(
+                      'gps를 이용해 주소 입력',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(height: 10), // 텍스트와 버튼 사이 간격 조절
+
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Start_02(
+                                  dropdownValue1: dropdownValue1,
+                                  dropdownValue2: dropdownValue2,
+                                  dropdownValue3: dropdownValue3,
+                                )),
+                      );
+                    },
+                    style: myButtonStyle,
+                    child: const Text(
+                      'Next',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
     );
+  }
+}
+
+class LoadingOverlay {
+  final BuildContext context;
+  OverlayEntry? _overlayEntry;
+
+  LoadingOverlay(this.context);
+
+  void show() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _overlayEntry = OverlayEntry(
+        builder: (context) => Stack(
+          children: [
+            Opacity(
+              opacity: 0.5,
+              child: ModalBarrier(dismissible: false, color: Colors.grey),
+            ),
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        ),
+      );
+
+      Overlay.of(context).insert(_overlayEntry!);
+    });
+  }
+
+  void hide() {
+    _overlayEntry?.remove();
+  }
+
+  void remove() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
   }
 }
 
