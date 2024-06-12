@@ -60,48 +60,63 @@ class Start_02 extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 100),
+            SizedBox(height: 80),
 
             // 버튼 컨테이너
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: Column(
                 children: [
-                  // 첫 번째 버튼
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Start_01()),
-                      );
-                    },
-                    style: myButtonStyle,
-                    child: const Text(
-                      'Back',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  // 추가할 텍스트
+                  Text(
+                    '이 주소가 맞나요?',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
+                  SizedBox(height: 20),
 
-                  // 두 번째 버튼
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Main_01()),
-                      );
-                    },
-                    style: myButtonStyle,
-                    child: const Text(
-                      'Start',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                  // 버튼들
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // 첫 번째 버튼
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Start_01()),
+                          );
+                        },
+                        style: myButtonStyle,
+                        child: const Text(
+                          '< Back',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
+
+                      // 두 번째 버튼
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Main_01()),
+                          );
+                        },
+                        style: myButtonStyle,
+                        child: const Text(
+                          'Start >',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
