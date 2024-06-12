@@ -1,35 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_mobile_computing/finish_workout_page.dart';
 import 'models/Exercise.dart';
 import 'models/TimerManager.dart';
-
-class ExerciseSet {
-  int setNumber;
-  int kg;
-  int reps;
-  String target;
-  TextEditingController kgController;
-  TextEditingController repsController;
-  bool completed; // 세트 완료 여부
-
-  ExerciseSet({
-    required this.setNumber,
-    this.kg = 0,
-    this.reps = 0,
-    this.target = '-',
-    this.completed = false,
-  })  : kgController = TextEditingController(),
-        repsController = TextEditingController() {
-    kgController.text = kg.toString();
-    repsController.text = reps.toString();
-  }
-
-  @override
-  String toString() {
-    return 'Set $setNumber: $kg kg x $reps reps, Target: $target';
-  }
-}
 
 class StartExercisePage extends StatefulWidget {
   final List<Exercise> selectedExercises;
@@ -63,10 +36,31 @@ class _StartExercisePageState extends State<StartExercisePage> {
   }
 
   void _finishExercise() {
+    // 스탑워치가 실행 중이라면 중지
     if (_isStopwatchRunning) {
       _stopwatchTimer?.cancel();
     }
-    Navigator.pushNamed(context, '/7', arguments: _stopwatchSeconds);
+
+    // 완료된 운동 목록 필터링 (여기서 각 운동의 세트별 완료 상태를 확인하고 필터링합니다.)
+    List<Exercise> completedExercises =
+        widget.selectedExercises.where((exercise) {
+      return exercise.sets.any((set) => set.completed);
+    }).toList();
+    // 로그 출력: 완료된 운동과 각 세트의 상세 정보
+    print("Completed Exercises: ${completedExercises.length}");
+    for (Exercise exercise in completedExercises) {
+      print("Exercise: ${exercise.name}");
+      for (ExerciseSet set in exercise.sets) {
+        print("  Set ${set.setNumber}: ${set.kg} kg x ${set.reps} reps");
+      }
+    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            FinishWorkoutPage(completedExercises: completedExercises),
+      ),
+    );
   }
 
   @override
@@ -143,9 +137,12 @@ class _StartExercisePageState extends State<StartExercisePage> {
           ),
           ElevatedButton(
             onPressed: _finishExercise,
-            child: Text('Finish'),
+            child: Text(
+              'Finish',
+              style: TextStyle(color: Colors.white),
+            ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 199, 199, 199),
+              backgroundColor: Color.fromARGB(255, 161, 224, 149),
             ),
           ),
         ],
@@ -199,6 +196,14 @@ class ExerciseInputCard extends StatefulWidget {
 
 class _ExerciseInputCardState extends State<ExerciseInputCard> {
   List<ExerciseSet> sets = [ExerciseSet(setNumber: 1)]; // 초기 세트 추가
+  // UI 업데이트와 동기화를 위한 체크박스 상태
+  bool isCompleted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    sets = widget.exercise.sets;
+  }
 
   void addSet() {
     setState(() {
@@ -207,13 +212,9 @@ class _ExerciseInputCardState extends State<ExerciseInputCard> {
   }
 
   void checkSetComplete(ExerciseSet set) {
-    if (set.kg > 0 && set.reps > 0) {
-      setState(() {
-        set.completed = true;
-      });
-      widget.resetRestTimerCallback(); // 타이머 초기화
-      widget.showRestTimerCallback(); // 세트 완료 시 휴식 타이머를 보여줌
-    }
+    setState(() {
+      set.completed = !set.completed;
+    });
   }
 
   void onKgChanged(String value, ExerciseSet set) {
@@ -271,8 +272,14 @@ class _ExerciseInputCardState extends State<ExerciseInputCard> {
           ),
           ElevatedButton(
             onPressed: addSet,
-            child: Text('+ Add Set'),
+            child: Text(
+              '+ Add Set',
+              style: TextStyle(color: Color.fromARGB(255, 77, 77, 77)),
+            ),
             style: ElevatedButton.styleFrom(
+              fixedSize: Size(300, 20),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
               backgroundColor: const Color.fromARGB(255, 182, 182, 182), // 배경색
             ),
           ),
