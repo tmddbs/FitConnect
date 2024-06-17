@@ -4,8 +4,12 @@ import 'package:ksy_0522/global.dart';
 
 class FinishWorkoutPage extends StatelessWidget {
   final List<Exercise> completedExercises; // 완료된 운동 목록
+  final int exerciseDuration; // 운동 시간을 초 단위로 저장하는 변수
 
-  FinishWorkoutPage({Key? key, required this.completedExercises})
+  FinishWorkoutPage(
+      {Key? key,
+      required this.completedExercises,
+      required this.exerciseDuration})
       : super(key: key);
 
   void _shareWorkoutHistory(BuildContext context) {
@@ -116,7 +120,7 @@ class FinishWorkoutPage extends StatelessWidget {
                 children: [
                   Icon(Icons.access_time),
                   SizedBox(width: 5),
-                  Text('00:00'),
+                  Text(formatTime(exerciseDuration)),
                 ],
               ),
               Row(
@@ -182,4 +186,10 @@ class FinishWorkoutPage extends StatelessWidget {
       ),
     );
   }
+}
+
+String formatTime(int totalSeconds) {
+  int minutes = totalSeconds ~/ 60;
+  int seconds = totalSeconds % 60;
+  return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
 }
