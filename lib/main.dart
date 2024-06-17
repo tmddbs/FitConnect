@@ -34,8 +34,10 @@ class MyApp extends StatelessWidget {
         '/7': (context) {
           // 예시 데이터
           List<Exercise> completedExercises = []; // 여기에 완료된 운동 데이터 리스트를 채워넣어야 함
-
-          return FinishWorkoutPage(completedExercises: completedExercises);
+          int exerciseDuration = 0;
+          return FinishWorkoutPage(
+              completedExercises: completedExercises,
+              exerciseDuration: exerciseDuration);
         },
         '/8': (context) => Start_02(),
         '/9': (context) => Main(),
