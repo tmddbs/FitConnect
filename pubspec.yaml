@@ -69,6 +69,7 @@ flutter:
     - assets/map/
     - assets/marker/
     - assets/img_0611/board_map/
+    - assets/img_0611/dumb_icon.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
