@@ -6,10 +6,11 @@ class Weight_Training_Page_1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(45.0), // 상단바의 높이를 조정
+        preferredSize: Size.fromHeight(60.0), // 상단바의 높이를 조정
         child: AppBar(
+          automaticallyImplyLeading: false,
           title: Padding(
-            padding: EdgeInsets.only(left: 10, bottom: 0, top: 20),
+            padding: EdgeInsets.only(left: 10, bottom: 20, top: 20),
             child: Align(
               alignment: Alignment.bottomLeft,
               child: Row(
@@ -78,7 +79,7 @@ class Weight_Training_Page_1 extends StatelessWidget {
       //구분
       body: Container(
         //메인부
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
@@ -106,12 +107,15 @@ class Weight_Training_Page_1 extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        color: Colors.blue[300], // 왼쪽 이미지의 배경색
-                        padding: EdgeInsets.all(12),
-                        child: Icon(Icons.image,
-                            size: 24, color: Colors.white), // 이미지 대체할거임(임시)
+                        padding: EdgeInsets.all(3),
+                        child: Image.asset(
+                          'assets/img_0611/dumb_icon.png',
+                          width: 72, // 이미지의 너비 조정
+                          height: 72, // 이미지의 높이 조정
+                          //color: Colors.white, // 이미지에 색상 효과를 적용하고 싶을 때 사용
+                        ),
                       ),
-                      SizedBox(width: 30), // 이미지와 텍스트 사이 간격
+                      SizedBox(width: 15), // 이미지와 텍스트 사이 간격
                       Expanded(
                         child: Container(
                           decoration: BoxDecoration(
@@ -175,13 +179,13 @@ class Weight_Training_Page_1 extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 90),
+            SizedBox(height: 40),
             ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, '/5'),
               child: Text('+ Create Program', style: TextStyle(fontSize: 30)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green[300],
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 3),
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 3),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0)),
               ),
