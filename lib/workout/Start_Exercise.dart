@@ -19,6 +19,20 @@ class _StartExercisePageState extends State<StartExercisePage> {
   int _stopwatchSeconds = 0;
   Timer? _stopwatchTimer;
   bool _isStopwatchRunning = false;
+  late List<Exercise> _selectedExercises;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeSession();
+  }
+
+  void _initializeSession() {
+    _selectedExercises = List.from(widget.selectedExercises); // 초기 운동 리스트 복사
+    _stopwatchSeconds = 0;
+    _isStopwatchRunning = false;
+    _stopwatchTimer?.cancel();
+  }
 
   void _toggleStopwatch() {
     if (_isStopwatchRunning) {
@@ -42,8 +56,7 @@ class _StartExercisePageState extends State<StartExercisePage> {
     }
 
     // 완료된 운동 목록 필터링 (여기서 각 운동의 세트별 완료 상태를 확인하고 필터링합니다.)
-    List<Exercise> completedExercises =
-        widget.selectedExercises.where((exercise) {
+    List<Exercise> completedExercises = _selectedExercises.where((exercise) {
       return exercise.sets.any((set) => set.completed);
     }).toList();
     // 로그 출력: 완료된 운동과 각 세트의 상세 정보
@@ -57,10 +70,24 @@ class _StartExercisePageState extends State<StartExercisePage> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            FinishWorkoutPage(completedExercises: completedExercises),
+        builder: (context) => FinishWorkoutPage(
+            completedExercises: completedExercises,
+            exerciseDuration: _stopwatchSeconds),
       ),
     );
+  }
+
+  void _resetState() {
+    setState(() {
+      _selectedExercises = List.from(widget.selectedExercises); // 초기 상태로 재설정
+      _stopwatchSeconds = 0;
+      _isStopwatchRunning = false;
+      for (var exercise in _selectedExercises) {
+        for (var set in exercise.sets) {
+          set.completed = false; // 모든 세트의 완료 상태를 초기화
+        }
+      }
+    });
   }
 
   @override
@@ -97,7 +124,7 @@ class _StartExercisePageState extends State<StartExercisePage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, '/6'),
+                onPressed: () => Navigator.pop(context),
                 child: Text('+ Add Exercise'),
               ),
               ElevatedButton(
@@ -195,7 +222,7 @@ class ExerciseInputCard extends StatefulWidget {
 }
 
 class _ExerciseInputCardState extends State<ExerciseInputCard> {
-  List<ExerciseSet> sets = [ExerciseSet(setNumber: 1)]; // 초기 세트 추가
+  List<ExerciseSet> sets = []; // 초기화를 선언부에서 제거
   // UI 업데이트와 동기화를 위한 체크박스 상태
   bool isCompleted = false;
 
