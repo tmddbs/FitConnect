@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         '/1': (context) => RunningPage(),
         '/2': (context) => Weight_Training_Page_1(),
         '/3': (context) => CrossFitPage(),
-        //'/4': (context) => StartExercisePage(), //이 ㄱㅅㄲ;;;;;;아오
+        //'/4': (context) => StartExercisePage(), //;;;;;;
         '/5': (context) => Weight_Training_Page_2(),
         '/6': (context) => SelectExercisePage(),
         '/7': (context) {
